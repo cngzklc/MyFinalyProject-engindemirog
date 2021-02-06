@@ -60,7 +60,6 @@ namespace DataAccess.Concrete.InMemory
             productToUpdate.CategoryId = product.CategoryId;
             productToUpdate.UnitPrice = product.UnitPrice;
             productToUpdate.UnitsInStock = product.UnitsInStock;
-            _products.Remove(productToUpdate);
         }
 
         public Product Get(Expression<Func<Product, bool>> filter)
