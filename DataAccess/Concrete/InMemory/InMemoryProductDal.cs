@@ -1,4 +1,5 @@
 ﻿using DataAccess.Abstract;
+using DataAccess.DTOs;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -64,23 +65,28 @@ namespace DataAccess.Concrete.InMemory
 
         public Product Get(Expression<Func<Product, bool>> filter)
         {
-            throw new NotImplementedException();
+            var query = filter.Compile();
+            return (Product)_products.SingleOrDefault(query.Invoke);
         }
-            //ProductManager altındaki GetAllByCategoryId çalıştığında, bu metod içerisindeki GetAll'ı çalıştırıyor.
-            //burada filter olarak ayarlama yapamadım.
-            //return _products;
-
-        //public List<Product> GetAllByCategory(int categoryId)
-        //{
-        //    return _products.Where(p => p.CategoryId == categoryId).ToList();
-        //}
-
 
         public List<Product> GetAll(Expression<Func<Product, bool>> filter = null)
         {
             //return filter == null ?
             //                    _products.ToList() :
             //                    _products.Where(filter).ToList();
+            if (filter == null)
+            {
+                return _products;
+            }
+            else
+            {
+                var query = filter.Compile();
+                return _products.Where(query.Invoke).ToList();
+            }
+        }
+
+        public List<ProductDetailDto> GetProductDetails()
+        {
             throw new NotImplementedException();
         }
     }
