@@ -25,17 +25,17 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.ProductNameInvalid);
             }
             _productDal.Add(product);
-            return new Result(true, Messages.ProductAdded);
+            return new SuccessResult(Messages.ProductAdded);
         }
 
         public IDataResult<List<Product>> GetAll()
         {
             //İş kodları
             //Yetkisi var mı? gibi kuralları geçtikten sonra aşağıdaki listeyi döndürecektir.
-            if (DateTime.Now.Hour==22)
-            {
-                return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
-            }
+            //if (DateTime.Now.Hour == 03)
+            //{
+            //    return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
+            //}
             return new DataResult<List<Product>>(_productDal.GetAll(),true,Messages.ProductsListed);
         }
 
