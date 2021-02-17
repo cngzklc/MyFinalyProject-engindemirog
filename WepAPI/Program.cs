@@ -1,3 +1,6 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Business.DependencyResolvers.Autofac;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -18,6 +21,13 @@ namespace WepAPI
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+        #region Autofac servis ekleme. (.net'e diyoruz ki; kendi IOC alt yapýný kullanma, Autofac IOC alt yapýsýný kullan diyoruz.)
+            .UseServiceProviderFactory(new AutofacServiceProviderFactory()) 
+            .ConfigureContainer<ContainerBuilder>(builder =>
+            {
+                builder.RegisterModule(new AutofacBusinessModule());
+            })
+        #endregion
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
