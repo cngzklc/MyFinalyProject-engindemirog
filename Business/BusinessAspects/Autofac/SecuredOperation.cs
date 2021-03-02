@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Business.Constants;
@@ -7,7 +6,6 @@ using Castle.DynamicProxy;
 using Core.Extensions;
 using Core.Utilities.Interceptors;
 using Core.Utilities.IoC;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,7 +19,7 @@ namespace Business.BusinessAspects.Autofac
         public SecuredOperation(string roles)
         {
             _roles = roles.Split(',');
-            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
+            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>(); //System.ArgumentNullException: 'Value cannot be null. ' hatasını verdiği yer.
             //productService = ServiceTool.ServiceProvider.GetService<IProductService>(); //Windowsform için
         }
 
