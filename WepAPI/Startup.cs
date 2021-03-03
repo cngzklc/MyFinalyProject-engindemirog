@@ -1,5 +1,7 @@
 using Business.Abstract;
 using Business.Concrete;
+using Core.DependencyResolvers;
+using Core.Extensions;
 using Core.Utilities.IoC;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.JWT;
@@ -39,6 +41,7 @@ namespace WepAPI
             //services.AddSingleton<IProductService, ProductManager>();
             //services.AddSingleton<IProductDal, EfProductDal>();
             #region 27 þubat 14.Günde eklenen kodlar
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -55,8 +58,11 @@ namespace WepAPI
                         IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
                     };
                 });
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            ServiceTool.Create(services);
+            services.AddDependencyResolvers(new ICoreModule[]
+            {
+            new CoreModule()
+            });
+            //ServiceTool.Create(services); //15. derste iptal edildi.
             #endregion
         }
 
@@ -71,7 +77,10 @@ namespace WepAPI
             app.UseHttpsRedirection();
 
             #region 27 þubat 14.Günde eklenen kod
+
             app.UseRouting();
+
+            app.UseAuthentication();
             #endregion
 
             app.UseRouting();
@@ -85,3 +94,21 @@ namespace WepAPI
         }
     }
 }
+
+//if (env.IsDevelopment())
+//{
+//    app.UseDeveloperExceptionPage();
+//}
+
+//app.UseHttpsRedirection();
+
+//app.UseRouting();
+
+//app.UseAuthentication();
+
+//app.UseAuthorization();
+
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapControllers();
+//});
