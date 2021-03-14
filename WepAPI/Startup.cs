@@ -83,8 +83,6 @@ namespace WepAPI
             app.UseAuthentication();
             #endregion
 
-            app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

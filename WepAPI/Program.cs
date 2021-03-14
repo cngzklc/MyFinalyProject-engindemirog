@@ -18,7 +18,6 @@ namespace WepAPI
         {
             CreateHostBuilder(args).Build().Run();
         }
-
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
         #region Autofac servis ekleme. (.net'e diyoruz ki; kendi IOC alt yapýný kullanma, Autofac IOC alt yapýsýný kullan diyoruz.)

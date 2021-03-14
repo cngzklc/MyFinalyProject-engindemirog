@@ -1,8 +1,10 @@
 ﻿using Business.Abstract;
 using Business.BusinessAspects.Autofac;
-using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Performance;
 using Core.Aspects.Autofac.Validation;
+using Core.Constants;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
@@ -14,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Business.Concrete
 {
@@ -26,8 +29,8 @@ namespace Business.Concrete
             _productDal = productDal;
             _categoryService = categoryService;
         }
-
-        [SecuredOperation("product.add,admin")]
+        [CacheRemoveAspect("IProductService.Get")] // Ürün eklendiği zaman tüm IPoductService türündeki Get metodu içeren cache'leri temizle diyoruz.
+        //[SecuredOperation("product.add,product.list,admin")]
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
@@ -64,6 +67,10 @@ namespace Business.Concrete
 
         }
 
+        //[PerformanceAspect(5)] //Bu metodunun çalışması 5 saniyeyi geçerse beni uyar. Ama bu işlem sadece GetAll metodunda çalışır.
+        //PerformanceAspect'i Core/Utilities/Interceptors/AspectInterceptorSelector.cs içerisine koyarsak tüm sistemi takip eder.
+        [CacheAspect]
+        [SecuredOperation("product.list,admin")]
         public IDataResult<List<Product>> GetAll()
         {
             //İş kodları
@@ -72,6 +79,7 @@ namespace Business.Concrete
             //{
             //    return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
             //}
+            Thread.Sleep(3000);
             return new DataResult<List<Product>>(_productDal.GetAll(), true, Messages.ProductsListed);
         }
 
@@ -80,6 +88,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(p => p.CategoryId == id));
         }
 
+        [CacheAspect]
         public IDataResult<Product> GetById(int productId)
         {
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
@@ -100,6 +109,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails());
         }
 
+        [CacheRemoveAspect("IProductService.Get")] // Ürün güncellendiği zaman tüm IPoductService türündeki Get metodu içeren cache'leri temizle diyoruz.
         public IResult Update(Product product)
         {
             throw new NotImplementedException();

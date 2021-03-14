@@ -17,6 +17,7 @@ namespace Business.DependencyResolvers.Autofac
         {
             //Burada yapılan işlem; WepAPI/Startup/ConfigureServices(IServiceCollection services) metodu içerisinde oluşturulan service'lerin yerinedir.
             //ConfigureServices veya buradaki(Load) tanımlamalar, ProductManager vb instance'ların her kullanıcı tarafından new'lenmesini engelleyerek performans artışı sağlıyor.
+            //Autofac = Interceition görevi görüyor. Interception: Metodun başında ya da sonund çalışan kod parçacıkları
             builder.RegisterType<ProductManager>().As<IProductService>().SingleInstance();
             builder.RegisterType<EfProductDal>().As<IProductDal>().SingleInstance();
 
@@ -29,12 +30,12 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<AuthManager>().As<IAuthService>();
             builder.RegisterType<JwtHelper>().As<ITokenHelper>();
 
-            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly(); // Çalışan uygulama içerisinde 
 
-            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
+            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()//implemente edilmiş interfacce'leri bul
                 .EnableInterfaceInterceptors(new ProxyGenerationOptions()
                 {
-                    Selector = new AspectInterceptorSelector()
+                    Selector = new AspectInterceptorSelector() //onlar için AspectIntercetorSelector class'ını çağır diyor.
                 }).SingleInstance();
         }
     }
