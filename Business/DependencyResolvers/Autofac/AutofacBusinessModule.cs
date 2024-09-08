@@ -17,7 +17,7 @@ namespace Business.DependencyResolvers.Autofac
         {
             //Burada yapılan işlem; WepAPI/Startup/ConfigureServices(IServiceCollection services) metodu içerisinde oluşturulan service'lerin yerinedir.
             //ConfigureServices veya buradaki(Load) tanımlamalar, ProductManager vb instance'ların her kullanıcı tarafından new'lenmesini engelleyerek performans artışı sağlıyor.
-            //Autofac = Interceition görevi görüyor. Interception: Metodun başında ya da sonund çalışan kod parçacıkları
+            //Autofac = Interception görevi görüyor. Interception: Metodun başında ya da sonund çalışan kod parçacıkları
             builder.RegisterType<ProductManager>().As<IProductService>().SingleInstance();
             builder.RegisterType<EfProductDal>().As<IProductDal>().SingleInstance();
 

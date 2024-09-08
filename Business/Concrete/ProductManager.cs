@@ -35,9 +35,12 @@ namespace Business.Concrete
         public IResult Add(Product product)
         {
             /*Refactor edilmiş kod*/
-            IResult result = BusinessRules.Run(CheckIfProductCountOfCategoryCorrect(product.CategoryId),
+            IResult result = BusinessRules.Run
+                (
+                CheckIfProductCountOfCategoryCorrect(product.CategoryId),
                 CheckIfProductNameExists(product.ProductName),
-                CheckIfCategoryLimitExceded());
+                CheckIfCategoryLimitExceded()
+                );
             if (result != null)
             {
                 return result;
